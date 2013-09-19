@@ -24,6 +24,7 @@ class RadioLibraryProvider(base.BaseLibraryProvider):
     def search(self, query=None, uris=None):
         if query is None:
             return
+        stations = []
         for (field, values) in query.iteritems():
             if hasattr(values, '__iter__'):
                 values = ' '.join(values)

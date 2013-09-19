@@ -199,7 +199,7 @@ class RadioApi():
                 'bitrate': station['bitrate'],
                 'id': station['id'],
                 'current_track': station['currentTrack'],
-                'stream_url': station.get('streamURL', ''),
+                'stream_url': station.get('streamUrls', [{}])[0].get('streamUrl', ''),
                 'description': station.get('description', '')
             })
         return formated_stations
