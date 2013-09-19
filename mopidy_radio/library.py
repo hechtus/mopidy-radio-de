@@ -16,22 +16,20 @@ class RadioLibraryProvider(base.BaseLibraryProvider):
 
     def lookup(self, uri):
         station = self.backend.session.get_station_by_station_id(int(uri.split(':')[1]))
-        print station
         return [self._station_to_track(station)]
 
     def refresh(self, uri=None):
         pass
 
     def search(self, query=None, uris=None):
-        print query
         if query is None:
             return
         for (field, values) in query.iteritems():
             if hasattr(values, '__iter__'):
-                value = ' '.join(values)
+                values = ' '.join(values)
 
-            stations = self.backend.session.search_stations_by_string(value)
-            print stations
+            if field == 'any':
+                stations = self.backend.session.search_stations_by_string(values)
 
         return SearchResult(uri = 'radio:search',
                             tracks = [self._station_to_track(station) for station in stations])
