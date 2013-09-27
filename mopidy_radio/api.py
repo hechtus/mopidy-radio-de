@@ -91,7 +91,7 @@ class RadioApi():
         path = 'menu/broadcastsofcategory'
         param = {
             'category': '_%s' % category_type,
-            'value': category_value,
+            'value': category_value.encode('utf-8'),
         }
         return self.__api_call(path, param)
 
@@ -100,7 +100,7 @@ class RadioApi():
                  % search_string)
         path = 'index/searchembeddedbroadcast'
         param = {
-            'q': search_string,
+            'q': search_string.encode('utf-8'),
             'start': '0',
             'rows': '100',
         }
