@@ -21,6 +21,7 @@ class RadioExtension(ext.Extension):
 
     def get_config_schema(self):
         schema = super(RadioExtension, self).get_config_schema()
+        schema['language'] = config.String()
         return schema
 
     def validate_environment(self):

@@ -16,6 +16,10 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
+
+# resolve playlist:
+# http://www.radio.de/info/playlist/resolveplaylist?broadcast=3836
+
 import json
 from urllib import urlencode
 from urllib2 import urlopen, Request, HTTPError, URLError
@@ -38,9 +42,7 @@ class RadioApi():
         'genre', 'topic', 'country', 'city', 'language',
     )
 
-    USER_AGENT = 'XBMC Addon Radio'
-
-    PLAYLIST_PREFIXES = ('m3u', 'pls')
+    USER_AGENT = 'Mopidy Radio Extension'
 
     def __init__(self, language='english', user_agent=USER_AGENT):
         self.set_language(language)
@@ -54,21 +56,19 @@ class RadioApi():
     def get_recommendation_stations(self):
         self.log('get_recommendation_stations started')
         path = 'broadcast/editorialreccomendationsembedded'
-        stations = self.__api_call(path)
-        return self.__format_stations(stations)
+        return self.__api_call(path)
 
     def get_top_stations(self):
         self.log('get_top_stations started')
         path = 'menu/broadcastsofcategory'
         param = {'category': '_top'}
-        stations = self.__api_call(path, param)
-        return self.__format_stations(stations)
+        return self.__api_call(path, param)
 
     def get_local_stations(self, num_entries=25):
         self.log('get_local_stations started with num_entries=%d'
                  % num_entries)
         most_wanted_stations = self._get_most_wanted(num_entries)
-        return self.__format_stations(most_wanted_stations['localBroadcasts'])
+        return self._get_most_wanted(num_entries)['localBroadcasts']
 
     def get_category_types(self):
         self.log('get_category_types started')
@@ -94,8 +94,7 @@ class RadioApi():
             'category': '_%s' % category_type,
             'value': category_value,
         }
-        stations = self.__api_call(path, param)
-        return self.__format_stations(stations)
+        return self.__api_call(path, param)
 
     def search_stations_by_string(self, search_string):
         self.log('search_stations_by_string started with search_string=%s'
@@ -104,22 +103,23 @@ class RadioApi():
         param = {
             'q': search_string,
             'start': '0',
-            'rows': '10000',
+            'rows': '100',
         }
-        stations = self.__api_call(path, param)
-        return self.__format_stations(stations)
+        return self.__api_call(path, param)
 
-    def get_station_by_station_id(self, station_id, resolve_playlists=True):
+    def get_station_by_station_id(self, station_id):
         self.log('get_station_by_station_id started with station_id=%s'
                  % station_id)
         path = 'broadcast/getbroadcastembedded'
         param = {'broadcast': str(station_id)}
-        station = self.__api_call(path, param)
-        if resolve_playlists and self.__check_paylist(station['streamURL']):
-            playlist_url = station['streamURL']
-            station['streamURL'] = self.__resolve_playlist(playlist_url)
-        stations = (station, )
-        return self.__format_stations(stations)[0]
+        return self.__api_call(path, param)
+
+    def resolve_playlist(self, station_id):
+        self.log('resolve_playlist started with station_id=%s'
+                 % station_id)
+        path = 'playlist/resolveplaylist'
+        param = {'broadcast': str(station_id)}
+        return self.__api_call(path, param)
 
     def _get_most_wanted(self, num_entries=25):
         self.log('get_most_wanted started with num_entries=%d'
@@ -141,29 +141,6 @@ class RadioApi():
         json_data = json.loads(response)
         return json_data
 
-    def __resolve_playlist(self, stream_url):
-        self.log('__resolve_playlist started with stream_url=%s'
-                 % stream_url)
-        servers = []
-        if stream_url.lower().endswith('m3u'):
-            response = self.__urlopen(stream_url)
-            self.log('__resolve_playlist found .m3u file')
-            servers = [
-                l for l in response.splitlines()
-                if l.strip() and not l.strip().startswith('#')
-            ]
-        elif stream_url.lower().endswith('pls'):
-            response = self.__urlopen(stream_url)
-            self.log('__resolve_playlist found .pls file')
-            servers = [
-                l.split('=')[1] for l in response.splitlines()
-                if l.lower().startswith('file')
-            ]
-        if servers:
-            self.log('__resolve_playlist found %d servers' % len(servers))
-            return random.choice(servers)
-        return stream_url
-
     def __urlopen(self, url):
         self.log('__urlopen opening url=%s' % url)
         req = Request(url)
@@ -177,39 +154,6 @@ class RadioApi():
             self.log('__urlopen URLError: %s' % error)
             raise RadioApiError('URLError: %s' % error)
         return response
-
-    @staticmethod
-    def __format_stations(stations):
-        formated_stations = []
-        for station in stations:
-            thumbnail = (
-                station.get('picture4TransName') or
-                station.get('picture4Name') or
-                station.get('picture1TransName').replace('_1_', '_4_') or
-                station.get('picture1Name').replace('_1_', '_4_')
-            )
-            genre = station.get('genresAndTopics') or ','.join(
-                station.get('genres', []) + station.get('topics', []),
-            )
-            formated_stations.append({
-                'name': station['name'],
-                'thumbnail': station['pictureBaseURL'] + thumbnail,
-                'rating': station['rating'],
-                'genre': genre,
-                'bitrate': station['bitrate'],
-                'id': station['id'],
-                'current_track': station['currentTrack'],
-                'stream_url': station.get('streamUrls', [{}])[0].get('streamUrl', ''),
-                'description': station.get('description', '')
-            })
-        return formated_stations
-
-    @staticmethod
-    def __check_paylist(stream_url):
-        for prefix in RadioApi.PLAYLIST_PREFIXES:
-            if stream_url.lower().endswith(prefix):
-                return True
-        return False
 
     @staticmethod
     def log(text):

@@ -5,11 +5,7 @@ import pykka
 from mopidy.backends import base
 
 from .library import RadioLibraryProvider
-from .playback import RadioPlaybackProvider
 from .api import RadioApi
-
-def do_nothing(*args, **kwargs):
-    pass
 
 class RadioBackend(pykka.ThreadingActor, base.Backend):
     def __init__(self, config, audio):
@@ -18,9 +14,8 @@ class RadioBackend(pykka.ThreadingActor, base.Backend):
         self.config = config
 
         self.library = RadioLibraryProvider(backend=self)
-        self.playback = RadioPlaybackProvider(audio=audio, backend=self)
-        self.session = RadioApi()
-        self.session.log = do_nothing
+        self.session = RadioApi(language=self.config['radio']['language'])
+        self.session.log = self.log
 
         self.uri_schemes = ['radio']
 
@@ -28,4 +23,8 @@ class RadioBackend(pykka.ThreadingActor, base.Backend):
         pass
 
     def on_stop(self):
+        pass
+
+    @staticmethod
+    def log(text):
         pass

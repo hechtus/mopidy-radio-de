@@ -16,7 +16,7 @@ class RadioLibraryProvider(base.BaseLibraryProvider):
 
     def lookup(self, uri):
         station = self.backend.session.get_station_by_station_id(int(uri.split(':')[1]))
-        return [self._station_to_track(station)]
+        return self._station_to_tracks(station)
 
     def refresh(self, uri=None):
         pass
@@ -48,3 +48,17 @@ class RadioLibraryProvider(base.BaseLibraryProvider):
             uri = 'radio:' + str(station['id']),
             name = station['name'],
             bitrate = station['bitrate'])
+
+    def _station_to_tracks(self, station):
+        tracks = []
+        for track in station['podcastUrls']:
+            tracks.append(Track(
+                    uri = track['streamUrl'],
+                    name = station['name'] + ': ' + track['title'],
+                    bitrate = track['bitRate']))
+        if tracks:
+            return tracks
+        return [Track(
+            uri = station['streamUrls'][0]['streamUrl'],
+            name = station['name'],
+            bitrate = station['streamUrls'][0]['bitRate'])]

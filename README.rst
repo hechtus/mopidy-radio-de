@@ -12,6 +12,13 @@ Usage
 
     sudo pip install mopidy-radio
    
+#. Before starting Mopidy, you must select your preferred language in
+   the Mopidy configuration file. This will affect the stations and
+   podcasts being found. Select between german, french, and english.
+
+    [radio]
+    language = german
+
 Project resources
 -----------------
 
