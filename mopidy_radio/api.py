@@ -3,6 +3,8 @@
 #
 #     Copyright (C) 2012 Tristan Fischer (sphere@dersphere.de)
 #
+#     Adapted for Mopidy by Ronald Hecht (ronald.hecht@gmx.de)
+#
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
@@ -16,9 +18,6 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-
-# resolve playlist:
-# http://www.radio.de/info/playlist/resolveplaylist?broadcast=3836
 
 import json
 from urllib import urlencode
