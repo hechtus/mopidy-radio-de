@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import logging
 import urlparse
+import dateutil
 
 from mopidy.models import Track
 from mopidy.backends import base
@@ -56,6 +57,7 @@ class RadioLibraryProvider(base.BaseLibraryProvider):
             for track in station['podcastUrls']:
                 tracks.append(Track(uri = track['streamUrl'],
                                     name = station['name'] + ': ' + track['title'],
+                                    date = dateutil.parser.parse(track['published']).date().isoformat(),
                                     bitrate = track['bitRate']))
             return tracks
 
