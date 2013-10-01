@@ -50,15 +50,22 @@ class RadioLibraryProvider(base.BaseLibraryProvider):
             bitrate = station['bitrate'])
 
     def _station_to_tracks(self, station):
-        tracks = []
-        for track in station['podcastUrls']:
-            tracks.append(Track(
-                    uri = track['streamUrl'],
-                    name = station['name'] + ': ' + track['title'],
-                    bitrate = track['bitRate']))
-        if tracks:
+        if station['podcastUrls']:
+            tracks = []
+            for track in station['podcastUrls']:
+                tracks.append(Track(uri = track['streamUrl'],
+                                    name = station['name'] + ': ' + track['title'],
+                                    bitrate = track['bitRate']))
             return tracks
-        return [Track(
-            uri = station['streamUrls'][0]['streamUrl'],
-            name = station['name'],
-            bitrate = station['streamUrls'][0]['bitRate'])]
+
+        for suffix in ['m3u', 'pls']:
+            if station['streamURL'].lower().endswith(suffix):
+                url = self.backend.session.parse_playlist(station['streamURL'])
+                if url:
+                    return [Track(uri = url,
+                                  name = station['name'],
+                                  bitrate = station['bitrate'])]
+
+        return [Track(uri = station['streamUrls'][0]['streamUrl'],
+                      name = station['name'],
+                      bitrate = station['streamUrls'][0]['bitRate'])]

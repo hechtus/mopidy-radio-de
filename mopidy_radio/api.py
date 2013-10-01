@@ -120,6 +120,29 @@ class RadioApi():
         param = {'broadcast': str(station_id)}
         return self.__api_call(path, param)
 
+    def parse_playlist(self, stream_url):
+        self.log('parse_playlist started with stream_url=%s'
+                 % stream_url)
+        servers = []
+        if stream_url.lower().endswith('m3u'):
+            response = self.__urlopen(stream_url)
+            self.log('parse_playlist found .m3u file')
+            servers = [
+                l for l in response.splitlines()
+                if l.strip() and not l.strip().startswith('#')
+            ]
+        elif stream_url.lower().endswith('pls'):
+            response = self.__urlopen(stream_url)
+            self.log('parse_playlist found .pls file')
+            servers = [
+                l.split('=')[1] for l in response.splitlines()
+                if l.lower().startswith('file')
+            ]
+        if servers:
+            self.log('parse_playlist found %d servers' % len(servers))
+            return random.choice(servers)
+        return stream_url
+
     def _get_most_wanted(self, num_entries=25):
         self.log('get_most_wanted started with num_entries=%d'
                  % num_entries)
