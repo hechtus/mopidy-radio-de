@@ -1,8 +1,8 @@
 Mopidy-Radio
 =============
 
-`Mopidy <http://www.mopidy.com/>`_ extension for playing radio from
-`radio.de <http://www.radio.de/>`_.
+`Mopidy <http://www.mopidy.com/>`_ extension to listen to internet
+radio stations and podcasts from `radio.de <http://www.radio.de/>`_.
 
 
 Usage
@@ -14,10 +14,13 @@ Usage
    
 #. Before starting Mopidy, you must select your preferred language in
    the Mopidy configuration file. This will affect the stations and
-   podcasts being found. Select between german, french, and english::
+   podcasts being found. Choose between german, french, and
+   english. You can also optionally define favorite stations that will
+   appear as playlists::
 
     [radio]
     language = german
+    favorites = Tagesschau, NDR 2, NDR Kultur
 
 Project resources
 -----------------

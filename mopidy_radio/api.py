@@ -95,14 +95,14 @@ class RadioApi():
         }
         return self.__api_call(path, param)
 
-    def search_stations_by_string(self, search_string):
+    def search_stations_by_string(self, search_string, max_results=100):
         self.log('search_stations_by_string started with search_string=%s'
                  % search_string)
         path = 'index/searchembeddedbroadcast'
         param = {
             'q': search_string.encode('utf-8'),
             'start': '0',
-            'rows': '100',
+            'rows': str(max_results),
         }
         return self.__api_call(path, param)
 
