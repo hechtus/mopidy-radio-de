@@ -27,10 +27,7 @@ class RadioPlaylistsProvider(base.BasePlaylistsProvider):
             for station in self.backend.session.search_stations_by_string(favorite, 5):
                 if station['name'] == favorite:
                     uri = 'radio://' + str(station['id'])
-                    tracks = [Track(
-                        uri = uri,
-                        name = favorite,
-                        bitrate = station['bitrate'])]
+                    tracks = self.backend.library.lookup(uri)
                     playlist = Playlist(uri = uri,
                                         name = favorite,
                                         tracks = tracks)
