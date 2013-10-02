@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import logging
 
 from mopidy.backends import base, listener
-from mopidy.models import Playlist, Track
+from mopidy.models import Playlist
 
 logger = logging.getLogger('mopidy.backends.radio')
 
