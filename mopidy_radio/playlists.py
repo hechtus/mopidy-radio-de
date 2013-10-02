@@ -19,7 +19,8 @@ class RadioPlaylistsProvider(base.BasePlaylistsProvider):
     def lookup(self, uri):
         for playlist in self.playlists:
             if playlist.uri == uri:
-                return playlist
+                tracks = self.backend.library.lookup(uri)
+                return playlist.copy(tracks=tracks)
 
     def refresh(self):
         playlists = []
@@ -27,10 +28,8 @@ class RadioPlaylistsProvider(base.BasePlaylistsProvider):
             for station in self.backend.session.search_stations_by_string(favorite, 5):
                 if station['name'] == favorite:
                     uri = 'radio://' + str(station['id'])
-                    tracks = self.backend.library.lookup(uri)
                     playlist = Playlist(uri = uri,
-                                        name = favorite,
-                                        tracks = tracks)
+                                        name = favorite)
                     playlists.append(playlist)
                     break
             else:
