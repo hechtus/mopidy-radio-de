@@ -10,13 +10,13 @@ def get_version(filename):
     return metadata['version']
 
 setup(
-    name='Mopidy-Radio',
-    version=get_version('mopidy_radio/__init__.py'),
-    url='http://github.com/hechtus/mopidy-radio/',
+    name='Mopidy-radio-de',
+    version=get_version('mopidy_radio_de/__init__.py'),
+    url='http://github.com/hechtus/mopidy-radio-de/',
     license='Apache License, Version 2.0',
     author='Ronald Hecht',
     author_email='ronald.hecht@gmx.de',
-    description='Radio extension for Mopidy',
+    description='radio.de extension for Mopidy',
     long_description=open('README.rst').read(),
     packages=find_packages(exclude=['tests', 'tests.*']),
     zip_safe=False,
@@ -27,7 +27,7 @@ setup(
     ],
     entry_points={
         'mopidy.ext': [
-            'radio = mopidy_radio:RadioExtension',
+            'radio-de = mopidy_radio_de:RadioDeExtension',
         ],
     },
     classifiers=[

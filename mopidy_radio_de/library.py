@@ -8,9 +8,9 @@ from mopidy.models import Track
 from mopidy.backends import base
 from mopidy.models import SearchResult
 
-logger = logging.getLogger('mopidy.backends.radio')
+logger = logging.getLogger('mopidy.backends.radio-de')
 
-class RadioLibraryProvider(base.BaseLibraryProvider):
+class RadioDeLibraryProvider(base.BaseLibraryProvider):
 
     def find_exact(self, query=None, uris=None):
         return self.search(query, uris)
@@ -34,7 +34,7 @@ class RadioLibraryProvider(base.BaseLibraryProvider):
             if field == 'any':
                 stations = self.backend.session.search_stations_by_string(values)
 
-        return SearchResult(uri = 'radio:search',
+        return SearchResult(uri = 'radio-de:search',
                             tracks = [self._station_to_track(station) for station in stations])
 
     def _validate_query(self, query):
@@ -47,7 +47,7 @@ class RadioLibraryProvider(base.BaseLibraryProvider):
 
     def _station_to_track(self, station):
         return Track(
-            uri = 'radio://' + str(station['id']),
+            uri = 'radio-de://' + str(station['id']),
             name = station['name'],
             bitrate = station['bitrate'])
 

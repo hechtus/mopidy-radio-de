@@ -25,32 +25,33 @@ from urllib2 import urlopen, Request, HTTPError, URLError
 import random
 
 
-class RadioApiError(Exception):
+class RadioDeApiError(Exception):
     pass
 
 
-class RadioApi():
+class RadioDeApi():
 
     MAIN_URLS = {
         'english': 'http://rad.io/info',
         'german': 'http://radio.de/info',
         'french': 'http://radio.fr/info',
+        'austrian': 'http://radio.at/info',
     }
 
     CATEGORY_TYPES = (
         'genre', 'topic', 'country', 'city', 'language',
     )
 
-    USER_AGENT = 'Mopidy Radio Extension'
+    USER_AGENT = 'Mopidy Radio.de Extension'
 
     def __init__(self, language='english', user_agent=USER_AGENT):
         self.set_language(language)
         self.user_agent = user_agent
 
     def set_language(self, language):
-        if not language in RadioApi.MAIN_URLS.keys():
+        if not language in RadioDeApi.MAIN_URLS.keys():
             raise ValueError('Invalid language')
-        self.api_url = RadioApi.MAIN_URLS[language]
+        self.api_url = RadioDeApi.MAIN_URLS[language]
 
     def get_recommendation_stations(self):
         self.log('get_recommendation_stations started')
@@ -71,12 +72,12 @@ class RadioApi():
 
     def get_category_types(self):
         self.log('get_category_types started')
-        return RadioApi.CATEGORY_TYPES
+        return RadioDeApi.CATEGORY_TYPES
 
     def get_categories(self, category_type):
         self.log('get_categories started with category_type=%s'
                  % category_type)
-        if not category_type in RadioApi.CATEGORY_TYPES:
+        if not category_type in RadioDeApi.CATEGORY_TYPES:
             raise ValueError('Bad category_type')
         path = 'menu/valuesofcategory'
         param = {'category': '_%s' % category_type}
@@ -171,12 +172,12 @@ class RadioApi():
             response = urlopen(req).read()
         except HTTPError, error:
             self.log('__urlopen HTTPError: %s' % error)
-            raise RadioApiError('HTTPError: %s' % error)
+            raise RadioDeApiError('HTTPError: %s' % error)
         except URLError, error:
             self.log('__urlopen URLError: %s' % error)
-            raise RadioApiError('URLError: %s' % error)
+            raise RadioDeApiError('URLError: %s' % error)
         return response
 
     @staticmethod
     def log(text):
-        print 'RadioApi: %s' % repr(text)
+        print 'RadioDeApi: %s' % repr(text)

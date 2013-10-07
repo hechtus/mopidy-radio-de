@@ -5,10 +5,10 @@ import logging
 from mopidy.backends import base, listener
 from mopidy.models import Playlist
 
-logger = logging.getLogger('mopidy.backends.radio')
+logger = logging.getLogger('mopidy.backends.radio-de')
 
 
-class RadioPlaylistsProvider(base.BasePlaylistsProvider):
+class RadioDePlaylistsProvider(base.BasePlaylistsProvider):
 
     def create(self, name):
         pass  # TODO
@@ -24,10 +24,10 @@ class RadioPlaylistsProvider(base.BasePlaylistsProvider):
 
     def refresh(self):
         playlists = []
-        for favorite in self.backend.config['radio']['favorites']:
+        for favorite in self.backend.config['radio-de']['favorites']:
             for station in self.backend.session.search_stations_by_string(favorite, 5):
                 if station['name'] == favorite:
-                    uri = 'radio://' + str(station['id'])
+                    uri = 'radio-de://' + str(station['id'])
                     playlist = Playlist(uri = uri,
                                         name = favorite)
                     playlists.append(playlist)

@@ -9,10 +9,10 @@ from mopidy import config, exceptions, ext
 __version__ = '0.1'
 
 
-class RadioExtension(ext.Extension):
+class RadioDeExtension(ext.Extension):
 
-    dist_name = 'Mopidy-Radio'
-    ext_name = 'radio'
+    dist_name = 'Mopidy-radio-de'
+    ext_name = 'radio-de'
     version = __version__
 
     def get_default_config(self):
@@ -20,7 +20,7 @@ class RadioExtension(ext.Extension):
         return config.read(conf_file)
 
     def get_config_schema(self):
-        schema = super(RadioExtension, self).get_config_schema()
+        schema = super(RadioDeExtension, self).get_config_schema()
         schema['language'] = config.String()
         schema['favorites'] = config.List(optional=True)
         return schema
@@ -29,5 +29,5 @@ class RadioExtension(ext.Extension):
         pass
 
     def get_backend_classes(self):
-        from .actor import RadioBackend
-        return [RadioBackend]
+        from .actor import RadioDeBackend
+        return [RadioDeBackend]
