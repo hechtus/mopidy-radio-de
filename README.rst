@@ -10,7 +10,7 @@ Usage
 
 #. Install the Mopidy-Radio extension by running::
 
-    sudo pip install mopidy-radio
+    pip install mopidy-radio
    
 #. Before starting Mopidy, you must select your preferred language in
    the Mopidy configuration file. This will affect the stations and
