@@ -55,10 +55,11 @@ class RadioLibraryProvider(base.BaseLibraryProvider):
         if station['podcastUrls']:
             tracks = []
             for track in station['podcastUrls']:
-                tracks.append(Track(uri = track['streamUrl'],
-                                    name = station['name'] + ': ' + track['title'],
-                                    date = dateutil.parser.parse(track['published']).date().isoformat(),
-                                    bitrate = track['bitRate']))
+                if track['streamStatus'] == 'VALID':
+                    tracks.append(Track(uri = track['streamUrl'],
+                                        name = station['name'] + ': ' + track['title'],
+                                        date = dateutil.parser.parse(track['published']).date().isoformat(),
+                                        bitrate = track['bitRate']))
             return tracks
 
         for suffix in ['m3u', 'pls']:
@@ -68,7 +69,10 @@ class RadioLibraryProvider(base.BaseLibraryProvider):
                     return [Track(uri = url,
                                   name = station['name'],
                                   bitrate = station['bitrate'])]
-
-        return [Track(uri = station['streamUrls'][0]['streamUrl'],
-                      name = station['name'],
-                      bitrate = station['streamUrls'][0]['bitRate'])]
+        
+        if station['streamUrls'][0]['streamStatus'] == 'VALID':
+            return [Track(uri = station['streamUrls'][0]['streamUrl'],
+                          name = station['name'],
+                          bitrate = station['streamUrls'][0]['bitRate'])]
+        else:
+            return []
