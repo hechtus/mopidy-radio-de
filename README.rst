@@ -1,16 +1,16 @@
-Mopidy-Radio-de
+Mopidy-radio-de
 ===============
 
 `Mopidy <http://www.mopidy.com/>`_ extension to listen to internet
-radio stations and podcasts from `radio.de <http://www.radio.de/>`_,
-`rad.io <http://www.rad.io/>`_, `radio.fr <http://www.radio.fr/>`_,
-and `radio.at <http://www.radio.at/>`_.
+radio stations and podcasts listed at `radio.de
+<http://www.radio.de/>`_, `rad.io <http://www.rad.io/>`_, `radio.fr
+<http://www.radio.fr/>`_, and `radio.at <http://www.radio.at/>`_.
 
 
 Usage
 -----
 
-#. Install the Mopidy-Radio-de extension by running::
+#. Install the Mopidy-radio-de extension by running::
 
     pip install mopidy-radio-de
    
