@@ -12,16 +12,10 @@ logger = logging.getLogger('mopidy.backends.radio-de')
 
 class RadioDeLibraryProvider(base.BaseLibraryProvider):
 
-    def find_exact(self, query=None, uris=None):
-        return self.search(query, uris)
-
     def lookup(self, uri):
         station_id = int(urlparse.urlparse(uri).netloc)
         station = self.backend.session.get_station_by_station_id(station_id)
         return self._station_to_tracks(station)
-
-    def refresh(self, uri=None):
-        pass
 
     def search(self, query=None, uris=None):
         if query is None:
