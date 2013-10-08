@@ -22,11 +22,11 @@ class RadioDeLibraryProvider(base.BaseLibraryProvider):
             return
         stations = []
         for (field, values) in query.iteritems():
-            if hasattr(values, '__iter__'):
-                values = ' '.join(values)
-
             if field == 'any':
-                stations = self.backend.session.search_stations_by_string(values)
+                if hasattr(values, '__iter__'):
+                    values = ' '.join(values)
+
+                stations += self.backend.session.search_stations_by_string(values)
 
         return SearchResult(uri = 'radio-de:search',
                             tracks = [self._station_to_track(station) for station in stations])
