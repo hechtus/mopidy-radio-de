@@ -1,6 +1,6 @@
 import unittest
 
-from mopidy_radio-de import RadioDeExtension, actor as backend_lib
+from mopidy_radio_de import RadioDeExtension, actor as backend_lib
 
 
 class ExtensionTest(unittest.TestCase):
