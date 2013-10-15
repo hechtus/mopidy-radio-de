@@ -19,10 +19,15 @@
 #    along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
+from __future__ import unicode_literals
+
+import logging
 import json
 from urllib import urlencode
 from urllib2 import urlopen, Request, HTTPError, URLError
 import random
+
+logger = logging.getLogger('mopidy.backends.radio-de')
 
 
 class RadioDeApiError(Exception):
@@ -54,28 +59,28 @@ class RadioDeApi():
         self.api_url = RadioDeApi.MAIN_URLS[language]
 
     def get_recommendation_stations(self):
-        self.log('get_recommendation_stations started')
+        logger.debug('get_recommendation_stations started')
         path = 'broadcast/editorialreccomendationsembedded'
         return self.__api_call(path)
 
     def get_top_stations(self):
-        self.log('get_top_stations started')
+        logger.debug('get_top_stations started')
         path = 'menu/broadcastsofcategory'
         param = {'category': '_top'}
         return self.__api_call(path, param)
 
     def get_local_stations(self, num_entries=25):
-        self.log('get_local_stations started with num_entries=%d'
-                 % num_entries)
+        logger.debug('get_local_stations started with num_entries=%d',
+                     num_entries)
         return self._get_most_wanted(num_entries)['localBroadcasts']
 
     def get_category_types(self):
-        self.log('get_category_types started')
+        logger.debug('get_category_types started')
         return RadioDeApi.CATEGORY_TYPES
 
     def get_categories(self, category_type):
-        self.log('get_categories started with category_type=%s'
-                 % category_type)
+        logger.debug('get_categories started with category_type=%s',
+                     category_type)
         if not category_type in RadioDeApi.CATEGORY_TYPES:
             raise ValueError('Bad category_type')
         path = 'menu/valuesofcategory'
@@ -84,8 +89,9 @@ class RadioDeApi():
         return categories
 
     def get_stations_by_category(self, category_type, category_value):
-        self.log(('get_stations_by_category started with category_type=%s, '
-                  'category_value=%s') % (category_type, category_value))
+        logger.debug('get_stations_by_category started with '
+                     'category_type=%s, category_value=%s',
+                     category_type, category_value)
         if not category_type in self.get_category_types():
             raise ValueError('Bad category_type')
         path = 'menu/broadcastsofcategory'
@@ -96,8 +102,8 @@ class RadioDeApi():
         return self.__api_call(path, param)
 
     def search_stations_by_string(self, search_string, max_results=100):
-        self.log('search_stations_by_string started with search_string=%s'
-                 % search_string)
+        logger.debug('search_stations_by_string started with search_string=%s',
+                     search_string)
         path = 'index/searchembeddedbroadcast'
         param = {
             'q': search_string.encode('utf-8'),
@@ -107,45 +113,45 @@ class RadioDeApi():
         return self.__api_call(path, param)
 
     def get_station_by_station_id(self, station_id):
-        self.log('get_station_by_station_id started with station_id=%s'
-                 % station_id)
+        logger.debug('get_station_by_station_id started with station_id=%s',
+                     station_id)
         path = 'broadcast/getbroadcastembedded'
         param = {'broadcast': str(station_id)}
         return self.__api_call(path, param)
 
     def resolve_playlist(self, station_id):
-        self.log('resolve_playlist started with station_id=%s'
-                 % station_id)
+        logger.debug('resolve_playlist started with station_id=%s',
+                     station_id)
         path = 'playlist/resolveplaylist'
         param = {'broadcast': str(station_id)}
         return self.__api_call(path, param)
 
     def parse_playlist(self, stream_url):
-        self.log('parse_playlist started with stream_url=%s'
-                 % stream_url)
+        logger.debug('parse_playlist started with stream_url=%s',
+                     stream_url)
         servers = []
         if stream_url.lower().endswith('m3u'):
             response = self.__urlopen(stream_url)
-            self.log('parse_playlist found .m3u file')
+            logger.debug('parse_playlist found .m3u file')
             servers = [
                 l for l in response.splitlines()
                 if l.strip() and not l.strip().startswith('#')
             ]
         elif stream_url.lower().endswith('pls'):
             response = self.__urlopen(stream_url)
-            self.log('parse_playlist found .pls file')
+            logger.debug('parse_playlist found .pls file')
             servers = [
                 l.split('=')[1] for l in response.splitlines()
                 if l.lower().startswith('file')
             ]
         if servers:
-            self.log('parse_playlist found %d servers' % len(servers))
+            logger.debug('parse_playlist found %d servers', len(servers))
             return random.choice(servers)
         return stream_url
 
     def _get_most_wanted(self, num_entries=25):
-        self.log('get_most_wanted started with num_entries=%d'
-                 % num_entries)
+        logger.debug('get_most_wanted started with num_entries=%d',
+                     num_entries)
         if not isinstance(num_entries, int):
             raise TypeError('Need int')
         path = 'account/getmostwantedbroadcastlists'
@@ -154,8 +160,8 @@ class RadioDeApi():
         return stations_lists
 
     def __api_call(self, path, param=None):
-        self.log('__api_call started with path=%s, param=%s'
-                 % (path, param))
+        logger.debug('__api_call started with path=%s, param=%s',
+                     path, param)
         url = '%s/%s' % (self.api_url, path)
         if param:
             url += '?%s' % urlencode(param)
@@ -164,19 +170,15 @@ class RadioDeApi():
         return json_data
 
     def __urlopen(self, url):
-        self.log('__urlopen opening url=%s' % url)
+        logger.debug('__urlopen opening url=%s', url)
         req = Request(url)
         req.add_header('User-Agent', self.user_agent)
         try:
             response = urlopen(req).read()
         except HTTPError, error:
-            self.log('__urlopen HTTPError: %s' % error)
+            logger.error('__urlopen HTTPError: %s', error)
             raise RadioDeApiError('HTTPError: %s' % error)
         except URLError, error:
-            self.log('__urlopen URLError: %s' % error)
+            logger.error('__urlopen URLError: %s', error)
             raise RadioDeApiError('URLError: %s' % error)
         return response
-
-    @staticmethod
-    def log(text):
-        print 'RadioDeApi: %s' % repr(text)

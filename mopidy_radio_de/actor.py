@@ -18,7 +18,6 @@ class RadioDeBackend(pykka.ThreadingActor, base.Backend):
         self.library = RadioDeLibraryProvider(backend=self)
         self.playlists = RadioDePlaylistsProvider(backend=self)
         self.api = RadioDeApi(language=self.config['radio-de']['language'])
-        self.api.log = self.log
 
         self.uri_schemes = ['radio-de']
 
@@ -26,8 +25,4 @@ class RadioDeBackend(pykka.ThreadingActor, base.Backend):
         self.playlists.refresh()
 
     def on_stop(self):
-        pass
-
-    @staticmethod
-    def log(text):
         pass
