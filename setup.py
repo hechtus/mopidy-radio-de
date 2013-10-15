@@ -25,7 +25,7 @@ setup(
         'setuptools',
         'Mopidy >= 0.14',
         'Pykka >= 1.1',
-        'dateutil',
+        'python-dateutil',
     ],
     entry_points={
         'mopidy.ext': [
