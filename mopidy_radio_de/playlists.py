@@ -25,16 +25,16 @@ class RadioDePlaylistsProvider(base.BasePlaylistsProvider):
     def refresh(self):
         playlists = []
         for favorite in self.backend.config['radio-de']['favorites']:
-            for station in self.backend.session.search_stations_by_string(favorite, 5):
+            stations = self.backend.api.search_stations_by_string(favorite, 5)
+            for station in stations:
                 if station['name'] == favorite:
                     uri = 'radio-de://' + str(station['id'])
-                    playlist = Playlist(uri = uri,
-                                        name = favorite)
+                    playlist = Playlist(uri=uri, name=favorite)
                     playlists.append(playlist)
                     break
             else:
-                logger.warning('Favorite radio station \'%s\' not found', favorite)
-                
+                logger.warning('Favorite radio station \'%s\' not found',
+                               favorite)
 
         self.playlists = playlists
         listener.BackendListener.send('playlists_loaded')

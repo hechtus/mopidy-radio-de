@@ -2,8 +2,7 @@ from __future__ import unicode_literals
 
 import os
 
-import mopidy
-from mopidy import config, exceptions, ext
+from mopidy import config, ext
 
 
 __version__ = '0.1.1'

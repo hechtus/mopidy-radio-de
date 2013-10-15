@@ -8,6 +8,7 @@ from .library import RadioDeLibraryProvider
 from .playlists import RadioDePlaylistsProvider
 from .api import RadioDeApi
 
+
 class RadioDeBackend(pykka.ThreadingActor, base.Backend):
     def __init__(self, config, audio):
         super(RadioDeBackend, self).__init__()
@@ -16,8 +17,8 @@ class RadioDeBackend(pykka.ThreadingActor, base.Backend):
 
         self.library = RadioDeLibraryProvider(backend=self)
         self.playlists = RadioDePlaylistsProvider(backend=self)
-        self.session = RadioDeApi(language=self.config['radio-de']['language'])
-        self.session.log = self.log
+        self.api = RadioDeApi(language=self.config['radio-de']['language'])
+        self.api.log = self.log
 
         self.uri_schemes = ['radio-de']
 

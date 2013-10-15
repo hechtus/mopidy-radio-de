@@ -67,7 +67,6 @@ class RadioDeApi():
     def get_local_stations(self, num_entries=25):
         self.log('get_local_stations started with num_entries=%d'
                  % num_entries)
-        most_wanted_stations = self._get_most_wanted(num_entries)
         return self._get_most_wanted(num_entries)['localBroadcasts']
 
     def get_category_types(self):
