@@ -64,6 +64,13 @@ Project resources
 Changelog
 =========
 
+v0.1.2 (2013-11-08)
+-------------------
+
+- Added python-dateutil dependency
+- Added Travis CI and coveralls support
+
+
 v0.1.1 (2013-10-08)
 -------------------
 
