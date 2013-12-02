@@ -64,6 +64,13 @@ Project resources
 Changelog
 =========
 
+v0.1.3 (2013-12-02)
+-------------------
+
+- Issue #4: Fixed a problem regarding favorites. Some stations could
+  not be found by the plugin.
+
+
 v0.1.2 (2013-11-08)
 -------------------
 
