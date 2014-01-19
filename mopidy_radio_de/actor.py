@@ -2,14 +2,14 @@ from __future__ import unicode_literals
 
 import pykka
 
-from mopidy.backends import base
+from mopidy import backend
 
 from .library import RadioDeLibraryProvider
 from .playlists import RadioDePlaylistsProvider
 from .api import RadioDeApi
 
 
-class RadioDeBackend(pykka.ThreadingActor, base.Backend):
+class RadioDeBackend(pykka.ThreadingActor, backend.Backend):
     def __init__(self, config, audio):
         super(RadioDeBackend, self).__init__()
 

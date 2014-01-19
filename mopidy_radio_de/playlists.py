@@ -2,13 +2,13 @@ from __future__ import unicode_literals
 
 import logging
 
-from mopidy.backends import base, listener
+from mopidy import backend
 from mopidy.models import Playlist
 
 logger = logging.getLogger('mopidy.backends.radio-de')
 
 
-class RadioDePlaylistsProvider(base.BasePlaylistsProvider):
+class RadioDePlaylistsProvider(backend.PlaylistsProvider):
 
     def create(self, name):
         pass  # TODO
@@ -37,7 +37,7 @@ class RadioDePlaylistsProvider(base.BasePlaylistsProvider):
                                favorite)
 
         self.playlists = playlists
-        listener.BackendListener.send('playlists_loaded')
+        backend.BackendListener.send('playlists_loaded')
 
     def save(self, playlist):
         pass  # TODO
