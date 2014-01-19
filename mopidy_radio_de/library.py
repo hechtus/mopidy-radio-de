@@ -7,7 +7,7 @@ from dateutil import parser
 from mopidy import backend
 from mopidy.models import SearchResult, Track
 
-logger = logging.getLogger('mopidy.backends.radio-de')
+logger = logging.getLogger(__name__)
 
 
 class RadioDeLibraryProvider(backend.LibraryProvider):

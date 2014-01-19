@@ -5,7 +5,7 @@ import logging
 from mopidy import backend
 from mopidy.models import Playlist
 
-logger = logging.getLogger('mopidy.backends.radio-de')
+logger = logging.getLogger(__name__)
 
 
 class RadioDePlaylistsProvider(backend.PlaylistsProvider):
