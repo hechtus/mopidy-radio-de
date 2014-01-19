@@ -24,9 +24,6 @@ class RadioDeExtension(ext.Extension):
         schema['favorites'] = config.List(optional=True)
         return schema
 
-    def validate_environment(self):
-        pass
-
-    def get_backend_classes(self):
+    def setup(self, registry):
         from .actor import RadioDeBackend
-        return [RadioDeBackend]
+        registry.add('backend', RadioDeBackend)

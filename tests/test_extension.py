@@ -1,3 +1,4 @@
+import mock
 import unittest
 
 from mopidy_radio_de import RadioDeExtension, actor as backend_lib
@@ -20,9 +21,11 @@ class ExtensionTest(unittest.TestCase):
 
         self.assertIn('favorites', schema)
 
-    def test_get_backend_classes(self):
+    def test_setup(self):
+        registry = mock.Mock()
+
         ext = RadioDeExtension()
+        ext.setup(registry)
 
-        backends = ext.get_backend_classes()
-
-        self.assertIn(backend_lib.RadioDeBackend, backends)
+        registry.add.assert_called_once_with(
+            'backend', backend_lib.RadioDeBackend)
