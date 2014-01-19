@@ -3,11 +3,11 @@ Mopidy-radio-de
 ***************
 
 .. image:: https://pypip.in/v/Mopidy-radio-de/badge.png
-    :target: https://crate.io/packages/Mopidy-radio-de/
+    :target: https://pypi.python.org/pypi/Mopidy-radio-de/
     :alt: Latest PyPI version
 
 .. image:: https://pypip.in/d/Mopidy-radio-de/badge.png
-    :target: https://crate.io/packages/Mopidy-radio-de/
+    :target: https://pypi.python.org/pypi/Mopidy-radio-de/
     :alt: Number of PyPI downloads
 
 .. image:: https://travis-ci.org/hechtus/mopidy-radio-de.png?branch=master
@@ -30,7 +30,7 @@ Installation
 Install the Mopidy-radio-de extension by running::
 
     pip install mopidy-radio-de
-   
+
 
 Configuration
 =============
@@ -44,6 +44,7 @@ playlists::
     [radio-de]
     language = german
     favorites = Tagesschau, NDR 2, NDR Kultur
+
 
 Usage
 =====
