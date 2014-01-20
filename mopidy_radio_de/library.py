@@ -4,14 +4,13 @@ import logging
 import urlparse
 from dateutil import parser
 
-from mopidy.models import Track
-from mopidy.backends import base
-from mopidy.models import SearchResult
+from mopidy import backend
+from mopidy.models import SearchResult, Track
 
-logger = logging.getLogger('mopidy.backends.radio-de')
+logger = logging.getLogger(__name__)
 
 
-class RadioDeLibraryProvider(base.BaseLibraryProvider):
+class RadioDeLibraryProvider(backend.LibraryProvider):
 
     def lookup(self, uri):
         station_id = int(urlparse.urlparse(uri).netloc)
