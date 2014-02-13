@@ -25,6 +25,7 @@ import logging
 import json
 from urllib import urlencode
 from urllib2 import urlopen, Request, HTTPError, URLError
+from urllib2 import ProxyHandler, build_opener, install_opener
 import random
 
 logger = logging.getLogger(__name__)
@@ -49,9 +50,14 @@ class RadioDeApi():
 
     USER_AGENT = 'Mopidy Radio.de Extension'
 
-    def __init__(self, language='english', user_agent=USER_AGENT):
+    def __init__(self, language='english', user_agent=USER_AGENT, proxy=''):
         self.set_language(language)
         self.user_agent = user_agent
+
+        if len(proxy):
+            proxy_support = ProxyHandler({'http': proxy, 'https': proxy})
+            opener = build_opener(proxy_support)
+            install_opener(opener)
 
     def set_language(self, language):
         if not language in RadioDeApi.MAIN_URLS.keys():
