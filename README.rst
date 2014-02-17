@@ -65,10 +65,11 @@ Project resources
 Changelog
 =========
 
-v0.2.0 (UNRELEASED)
+v0.2.0 (2014-02-17)
 -------------------
 
 - Require Mopidy >= 0.18.0.
+- Added proxy support
 
 
 v0.1.3 (2013-12-02)
