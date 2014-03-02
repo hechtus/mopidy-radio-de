@@ -50,11 +50,11 @@ class RadioDeApi():
 
     USER_AGENT = 'Mopidy Radio.de Extension'
 
-    def __init__(self, language='english', user_agent=USER_AGENT, proxy=''):
+    def __init__(self, language='english', user_agent=USER_AGENT, proxy=None):
         self.set_language(language)
         self.user_agent = user_agent
 
-        if len(proxy):
+        if proxy is not None:
             proxy_support = ProxyHandler({'http': proxy, 'https': proxy})
             opener = build_opener(proxy_support)
             install_opener(opener)
